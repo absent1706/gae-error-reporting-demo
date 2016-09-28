@@ -37,7 +37,7 @@ def err_500():
         data = {
           "serviceContext": {
             "service": "default",
-            # "version": 'v1'
+            "version": os.environ.get('GAE_MODULE_VERSION', 'default')
           },
           "message": traceback.format_exc(),
         }
@@ -48,10 +48,10 @@ def err_500():
             except OSError as exc:
                 if exc.errno != errno.EEXIST:
                     raise
-        with open(filename, 'a+') as outfile:
-            msg = json.dumps(data)
-            outfile.write('\n'+msg)
-        # raise
+        with open(filename, 'a+') as file:
+            file.write('\n'+json.dumps(data))
+        raise
+    # raise
         return '500 page', 500
 
 if __name__ == '__main__':
